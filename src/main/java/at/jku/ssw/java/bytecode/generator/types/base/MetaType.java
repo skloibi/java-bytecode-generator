@@ -54,6 +54,8 @@ public interface MetaType<T> extends Instantiable<T> {
         CHAR,
         INSTANCE,
         ARRAY,
+        STRICT_INSTANCE,
+        STRICT_ARRAY,
         VOID
     }
 

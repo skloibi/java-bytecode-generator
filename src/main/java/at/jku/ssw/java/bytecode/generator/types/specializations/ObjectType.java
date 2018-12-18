@@ -17,19 +17,33 @@ import static at.jku.ssw.java.bytecode.generator.utils.StatementDSL.ternary;
 /**
  * Specialized {@link Object} meta type.
  */
-public enum ObjectType implements RefType<Object> {
+public class ObjectType implements RefType<Object> {
 
     /**
      * Singleton.
      */
-    OBJECT;
+    public static final ObjectType OBJECT =
+            new ObjectType();
+
+    public static final class NonNull
+            extends ObjectType
+            implements RefType.NonNull<Object> {
+
+        public static final ObjectType.NonNull STRICT_OBJECT =
+                new ObjectType.NonNull();
+
+        @Override
+        public ObjectType toNullable() {
+            return OBJECT;
+        }
+    }
 
     /**
      * The methods that are available for this type.
      */
     private final List<LibMethod<?>> methods;
 
-    ObjectType() {
+    private ObjectType() {
         methods = inferMethods();
     }
 

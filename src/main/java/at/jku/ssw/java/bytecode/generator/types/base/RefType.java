@@ -14,8 +14,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static at.jku.ssw.java.bytecode.generator.types.base.MetaType.Kind.STRICT_INSTANCE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
+import static java.util.Collections.singletonList;
 
 /**
  * Meta type which generally describes reference types such as objects
@@ -83,6 +85,52 @@ public interface RefType<T> extends MetaType<T> {
 
     // endregion
     //-------------------------------------------------------------------------
+    // region Type restrictions
+
+    // TODO use / implement for subclasses
+
+    /**
+     * A non null version of this reference type.
+     *
+     * @param <T> The actual Java class that is mapped
+     */
+    interface NonNull<T> extends RefType<T> {
+        /**
+         * Returns a nullable version of this type.
+         *
+         * @return the nullable {@link RefType} instance corresponding
+         * to this type
+         */
+        RefType<T> toNullable();
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        default Kind kind() {
+            return STRICT_INSTANCE;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        default boolean isAssignableFrom(MetaType<?> other) {
+            return other instanceof NonNull && clazz().isAssignableFrom(other.clazz());
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        default List<Builder<T>> builders() {
+            return singletonList(new ConstructorBuilder<>(this));
+        }
+    }
+
+    // endregion
+    //-------------------------------------------------------------------------
+    // region Default methods
 
     /**
      * Helper that allows subtypes to automatically infer their public library

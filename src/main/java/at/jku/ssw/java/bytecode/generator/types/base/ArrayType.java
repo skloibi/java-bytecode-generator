@@ -152,6 +152,7 @@ public final class ArrayType<T> implements RefType<T> {
                 desc = "C";
                 break;
             case INSTANCE:
+            case STRICT_INSTANCE:
                 desc = "L" + type.clazz().getCanonicalName() + ";";
                 break;
             default:
